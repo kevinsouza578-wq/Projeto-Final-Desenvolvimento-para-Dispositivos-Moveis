@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function autenticado() {
+      return request.auth != null;
+    }
+    function meu(dados) {
+      return autenticado() && dados.ownerUid == request.auth.uid;
+    }
+    match /ordens/{ordemId} {
+      allow read, delete: if meu(resource.data);
+      allow create: if meu(request.resource.data);
+      allow update: if meu(resource.data) && meu(request.resource.data);
+
+      match /historico/{eventoId} {
+        allow read, delete: if autenticado();
+        allow create: if meu(request.resource.data);
+        allow update: if false;
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function autenticado() {
+      return request.auth != null;
+    }
+    function meu(dados) {
+      return autenticado() && dados.ownerUid == request.auth.uid;
+    }
+    function donoDaOrdemDepois(ordemId) {
+      return autenticado() &&
+        getAfter(/databases/$(database)/documents/ordens/$(ordemId)).data.ownerUid == request.auth.uid;
+    }
+    function donoDaOrdem(ordemId) {
+      return autenticado() &&
+        get(/databases/$(database)/documents/ordens/$(ordemId)).data.ownerUid == request.auth.uid;
+    }
+    match /ordens/{ordemId} {
+      allow get, list, delete: if meu(resource.data);
+      allow create: if meu(request.resource.data);
+      allow update: if meu(resource.data) && meu(request.resource.data);
+
+      match /historico/{eventoId} {
+        allow get, list, delete: if donoDaOrdem(ordemId);
+        allow create: if meu(request.resource.data) && donoDaOrdemDepois(ordemId);
+        allow update: if false;
+      }
+    }
+  }
+}

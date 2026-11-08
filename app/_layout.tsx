@@ -1,5 +1,7 @@
 import { cor } from '@/constants/oficina';
 import { auth } from '@/firebase';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { useEffect, useState } from 'react';
@@ -7,10 +9,11 @@ import { ActivityIndicator, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 export default function RootLayout() {
+  const [fontesCarregadas, erroFonte] = useFonts(Ionicons.font);
   const [usuario, setUsuario] = useState<User | null>(null);
   const [carregando, setCarregando] = useState(true);
   useEffect(() => onAuthStateChanged(auth, (u) => { setUsuario(u); setCarregando(false); }), []);
-  if (carregando) return <View style={{ flex: 1, justifyContent: 'center', backgroundColor: cor.fundo }}><ActivityIndicator color={cor.azul} size="large" /></View>;
+  if (carregando || (!fontesCarregadas && !erroFonte)) return <View style={{ flex: 1, justifyContent: 'center', backgroundColor: cor.fundo }}><ActivityIndicator color={cor.azul} size="large" /></View>;
   return <>
     <Stack screenOptions={{ headerStyle: { backgroundColor: cor.azul }, headerTintColor: 'white', contentStyle: { backgroundColor: cor.fundo } }}>
       <Stack.Protected guard={!usuario}><Stack.Screen name="(auth)" options={{ headerShown: false }} /></Stack.Protected>

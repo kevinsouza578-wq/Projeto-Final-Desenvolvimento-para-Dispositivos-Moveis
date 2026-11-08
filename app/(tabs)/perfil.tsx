@@ -1,5 +1,6 @@
 import { cor, estilo } from '@/constants/oficina';
 import { auth } from '@/firebase';
+import { router } from 'expo-router';
 import { signOut } from 'firebase/auth';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,9 +11,14 @@ export default function Perfil() {
   const [saindo, setSaindo] = useState(false);
   async function sair() {
     setSaindo(true);
-    try { await signOut(auth); }
-    catch { Toast.show({ type: 'error', text1: 'Erro ao sair' }); }
-    finally { setSaindo(false); }
+    try {
+      await signOut(auth);
+      router.replace('/(auth)');
+    } catch {
+      Toast.show({ type: 'error', text1: 'Erro ao sair' });
+    } finally {
+      setSaindo(false);
+    }
   }
   return <SafeAreaView style={estilo.pagina}>
     <View style={estilo.conteudo}>

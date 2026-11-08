@@ -3,7 +3,7 @@ import { alterarOrdem, criarOrdem, obterOrdem } from '@/services/ordens';
 import { STATUS, STATUS_ROTULO, type DadosOrdem, type StatusOrdem } from '@/types/ordem';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 function dataValida(valor: string) {
@@ -46,15 +46,20 @@ export default function FormularioOrdem({ id }: { id?: string }) {
     };
     setSalvando(true);
     try {
-      if (id) { await alterarOrdem(id, dados); router.back(); }
-      else {
+      if (id) {
+        await alterarOrdem(id, dados);
+        Toast.show({ type: 'success', text1: 'Serviço atualizado!' });
+        router.back();
+      } else {
         await criarOrdem(dados);
+        Toast.show({ type: 'success', text1: 'Serviço cadastrado!' });
         setCliente(''); setServico(''); setDescricao(''); setPrazo(''); setValor(''); setStatus('recebido');
         router.replace('/(tabs)/ordens');
       }
-      Toast.show({ type: 'success', text1: id ? 'Serviço atualizado!' : 'Serviço cadastrado!' });
-    } catch { Toast.show({ type: 'error', text1: 'Não foi possível salvar', text2: 'Confira a conexão e as permissões.' }); }
-    finally { setSalvando(false); }
+    } catch {
+      Toast.show({ type: 'error', text1: 'Não foi possível salvar', text2: 'Confira a conexão e as permissões.' });
+      setSalvando(false);
+    }
   }
 
   if (carregando) return <ActivityIndicator style={{ flex: 1 }} color={cor.azul} />;
@@ -77,8 +82,18 @@ export default function FormularioOrdem({ id }: { id?: string }) {
         <Text style={{ color: status === opcao ? 'white' : cor.texto, fontWeight: '700' }}>{STATUS_ROTULO[opcao]}</Text>
       </TouchableOpacity>)}
     </View>
-    <TouchableOpacity style={estilo.botao} disabled={salvando} onPress={salvar}>
+    <Pressable
+      accessibilityRole="button"
+      role="button"
+      disabled={salvando}
+      onPress={salvar}
+      style={({ pressed }) => [
+        estilo.botao,
+        Platform.OS === 'web' && ({ cursor: 'pointer', userSelect: 'none' } as any),
+        pressed && { opacity: 0.8 },
+      ]}
+    >
       {salvando ? <ActivityIndicator color="white" /> : <Text style={estilo.botaoTexto}>{id ? 'Salvar alterações' : 'Cadastrar serviço'}</Text>}
-    </TouchableOpacity>
+    </Pressable>
   </ScrollView>;
 }

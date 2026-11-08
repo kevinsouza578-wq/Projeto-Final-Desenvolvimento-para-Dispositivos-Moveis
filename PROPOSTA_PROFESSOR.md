@@ -23,8 +23,8 @@
 **Grupo (nomes a completar antes da entrega):**
 
 1. Kevin — estrutura Expo Router, integração e documentação.
-2. Integrante 2 — autenticação e testes de login/logout.
-3. Integrante 3 — CRUD das ordens de serviço e validações.
-4. Integrante 4 — histórico, painel e apresentação visual.
+2. Bruno Vinicius — autenticação e testes de login/logout.
+3. Erick — CRUD das ordens de serviço e validações.
+4. Gabriel  — histórico, painel e apresentação visual.
 
 **Pedido:** aprovação deste tema livre para seguir as atividades previstas na rubrica.

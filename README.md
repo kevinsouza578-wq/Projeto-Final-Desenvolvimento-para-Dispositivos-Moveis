@@ -8,10 +8,8 @@ O projeto adapta a arquitetura do repositório-modelo do professor, mas traz uma
 
 1. Node.js 20.19 ou superior.
 2. Nesta pasta, execute `npm ci`.
-3. Crie um projeto exclusivo para o grupo no [Firebase Console](https://console.firebase.google.com/), registre um aplicativo **Web**, ative **Authentication / E-mail e senha** e crie o **Cloud Firestore**.
-4. Copie `.env.example` para `.env` e preencha os valores da configuração Web do seu Firebase. Não use o banco do professor.
-5. No Console Firebase, cole e publique o conteúdo de `firestore.rules` em **Firestore Database → Regras**.
-6. Execute `npm run web` para abrir o Oficina 360 no navegador.
+3. Execute `npm run web` para abrir o app no navegador. O código usa a configuração Web pública do Firebase do grupo fornecida por Bruno. O arquivo `.env` é opcional para usar outro projeto.
+4. Quem administra o Firebase deve conferir se as regras publicadas correspondem a `firestore.rules`.
 
 **Importante:** as variáveis `EXPO_PUBLIC_` são incluídas no aplicativo e não devem armazenar segredos. O objeto de configuração Web do Firebase não é uma senha; a proteção depende das regras de segurança. Não salve contas reais, senhas ou dados sensíveis de clientes no repositório.
 
@@ -55,7 +53,7 @@ Execute `npm run typecheck` para conferir os tipos, `npm run lint` para revisar 
 
 ## Testes e entregas pendentes
 
-O código é preparado para ser executado, mas a demonstração real depende do **Firebase do grupo**. Antes da apresentação, testar no navegador e registrar capturas de tela, inclusive do console do Firebase. Não afirmar que o backend está conectado antes desse teste.
+O aplicativo usa o Firebase do grupo. Antes da apresentação, testar no navegador e registrar capturas de tela, inclusive do console do Firebase. Não afirmar que o backend está conectado antes desse teste.
 
 Documentação complementar: [PROPOSTA_PROFESSOR.md](PROPOSTA_PROFESSOR.md) e [APRESENTACAO.md](APRESENTACAO.md).
 
